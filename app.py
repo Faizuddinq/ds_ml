@@ -32,17 +32,41 @@ def recommend_roles(input_role, df, similarity_matrix, top_n=3):
     return [(df.iloc[i[0]]["Job Role"], i[1]) for i in sim_scores]
 
 # Streamlit UI
-st.title(" Job Role Recommendation Engine")
+st.set_page_config(page_title="Job Role Recommender", page_icon="🔍", layout="wide")
 
-# User input: Select a job role
-selected_role = st.selectbox("Select a job role:", df["Job Role"].tolist())
+# Sidebar for instructions
+with st.sidebar:
+    st.title("⚙️ About This App")
+    st.write(
+        """
+        This AI-powered tool recommends the **top 3 most similar job roles** based on required skills.
+        
+        - 🔎 **Type a job role** or **select from the list**.
+        - 📊 **See job similarity scores** visually.
+        - 🚀 **Helps career changers & job seekers** find related roles!
+        """
+    )
+    st.markdown("---")
+    st.write("📌 **Created by [Your Name]**")
 
+# Main UI
+st.title("🔍 Job Role Recommendation Engine")
+
+# Search bar for job roles
+selected_role = st.text_input("Enter a job role:", "").strip()
+
+# Alternative: Use dropdown if no input
+if not selected_role:
+    selected_role = st.selectbox("Or select from the list:", df["Job Role"].tolist())
+
+# Find similar jobs when button is clicked
 if st.button("Find Similar Roles"):
     recommendations = recommend_roles(selected_role, df, cosine_sim)
 
     if recommendations:
-        st.subheader(" Top 3 Similar Roles:")
+        st.subheader(f"📌 Top 3 Similar Roles to **{selected_role}**:")
         for role, score in recommendations:
-            st.write(f"**{role}** (Similarity: {score:.2f})")
+            st.write(f"### {role}  \nSimilarity Score: ")
+            st.progress(float(score))  # Visual bar representation
     else:
-        st.write("No similar roles found.")
+        st.warning("⚠️ No similar roles found. Try a different job title.")
