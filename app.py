@@ -47,7 +47,7 @@ with st.sidebar:
         """
     )
     st.markdown("---")
-    st.write("📌 **Created by [Your Name]**")
+    st.write("📌 **Created by Aiman Suhail**")
 
 # Main UI
 st.title("🔍 Job Role Recommendation Engine")
@@ -66,7 +66,7 @@ if st.button("Find Similar Roles"):
     if recommendations:
         st.subheader(f"📌 Top 3 Similar Roles to **{selected_role}**:")
         for role, score in recommendations:
-            st.write(f"### {role}  \nSimilarity Score: ")
+            st.write(f"### {role}  \n🔹 **Similarity Score:** `{score:.2f}`")
             st.progress(float(score))  # Visual bar representation
     else:
         st.warning("⚠️ No similar roles found. Try a different job title.")
